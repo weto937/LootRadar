@@ -1,0 +1,2848 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   LootRadar — Seu radar para o melhor preço gamer
+  </title>
+  <meta content="LootRadar ajuda você a explorar hardware, consoles e acessórios e comparar preços entre lojas." name="description"/>
+  <style>
+   :root{
+  --bg:#070910;
+  --panel:#0e1320;
+  --panel2:#131a2a;
+  --line:#25304a;
+  --text:#f7f9ff;
+  --muted:#9aa6bd;
+  --green:#6cff9a;
+  --cyan:#4edcff;
+  --purple:#9d6cff;
+  --yellow:#ffd86c}
+*{
+  box-sizing:border-box}
+html{
+  scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;
+  background:#070910;
+  color:var(--text)}
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(circle at 15% 0,#19365a55,transparent 32%),radial-gradient(circle at 85% 10%,#4c1d9550,transparent 28%);
+  z-index:-1}
+.wrap{
+  width:min(1200px,calc(100% - 30px));
+  margin:auto}
+.top{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:#070910dd;
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid #ffffff12}
+.nav{
+  height:68px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px}
+.logo{
+  font-weight:950;
+  font-size:22px;
+  letter-spacing:-.7px}
+.logo b{
+  color:var(--green)}
+.navlinks{
+  display:flex;
+  gap:18px;
+  color:var(--muted);
+  font-size:14px}
+.navlinks a{
+  color:inherit;
+  text-decoration:none}
+.hero{
+  padding:72px 0 36px}
+.heroGrid{
+  display:grid;
+  grid-template-columns:1.25fr .75fr;
+  gap:24px;
+  align-items:center}
+.eyebrow{
+  color:var(--green);
+  font-weight:800;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:1.5px}
+.hero h1{
+  font-size:clamp(42px,7vw,76px);
+  line-height:.96;
+  letter-spacing:-4px;
+  margin:14px 0 20px;
+  max-width:850px}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(90deg,var(--green),var(--cyan));
+  -webkit-background-clip:text;
+  color:transparent}
+.hero p{
+  font-size:18px;
+  color:var(--muted);
+  line-height:1.65;
+  max-width:700px}
+.searchbox{
+  display:flex;
+  gap:10px;
+  background:#101625;
+  border:1px solid var(--line);
+  padding:8px;
+  border-radius:18px;
+  margin-top:28px;
+  box-shadow:0 18px 60px #0008}
+.searchbox input{
+  flex:1;
+  min-width:0;
+  background:transparent;
+  border:0;
+  color:white;
+  padding:13px;
+  font-size:16px;
+  outline:0}
+.searchbox button,.cta{
+  border:0;
+  background:var(--green);
+  color:#061009;
+  font-weight:900;
+  padding:13px 18px;
+  border-radius:12px;
+  cursor:pointer}
+.heroCard{
+  background:linear-gradient(145deg,#171f32,#0d121e);
+  border:1px solid #ffffff18;
+  border-radius:28px;
+  padding:26px;
+  box-shadow:0 25px 80px #0009;
+  transform:rotate(1deg)}
+.heroCard .big{
+  font-size:64px}
+.heroCard h3{
+  font-size:25px;
+  margin:12px 0 8px}
+.heroCard p{
+  font-size:14px}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:22px}
+.stat{
+  background:#ffffff08;
+  border:1px solid #ffffff0c;
+  border-radius:14px;
+  padding:14px}
+.stat strong{
+  display:block;
+  font-size:21px}
+.stat span{
+  color:var(--muted);
+  font-size:11px}
+.notice{
+  margin:18px 0 30px;
+  border:1px solid #5d4b21;
+  background:#2a210d;
+  color:#ffe08b;
+  padding:14px 17px;
+  border-radius:14px;
+  font-size:13px}
+.sectionTitle{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:15px;
+  margin:38px 0 18px}
+.sectionTitle h2{
+  font-size:28px;
+  margin:0}
+.sectionTitle p{
+  color:var(--muted);
+  margin:4px 0 0}
+.categoryGrid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px}
+.cat{
+  position:relative;
+  overflow:hidden;
+  text-align:left;
+  background:linear-gradient(145deg,#141b2b,#0d121d);
+  border:1px solid var(--line);
+  color:white;
+  padding:20px;
+  border-radius:18px;
+  cursor:pointer;
+  transition:.2s}
+.cat:hover{
+  transform:translateY(-4px);
+  border-color:#5c6d91}
+.cat .ico{
+  font-size:27px}
+.cat strong{
+  display:block;
+  margin-top:20px}
+.cat small{
+  color:var(--muted)}
+.cat:after{
+  content:"→";
+  position:absolute;
+  right:18px;
+  bottom:18px;
+  color:var(--green);
+  font-size:20px}
+.toolbar{
+  position:sticky;
+  top:68px;
+  z-index:15;
+  background:#070910ee;
+  padding:12px 0;
+  border-bottom:1px solid #ffffff0b;
+  margin-top:32px}
+.tools{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  overflow:auto}
+.filters{
+  display:flex;
+  gap:8px}
+.filter,.sort{
+  white-space:nowrap;
+  border:1px solid var(--line);
+  background:#101625;
+  color:#cbd4e5;
+  border-radius:999px;
+  padding:9px 13px;
+  cursor:pointer}
+.filter.active{
+  background:var(--green);
+  color:#061009;
+  border-color:var(--green);
+  font-weight:900}
+.sort{
+  margin-left:auto;
+  border-radius:10px}
+.progressbox{
+  margin:26px 0;
+  background:#0e1422;
+  border:1px solid var(--line);
+  padding:15px 18px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  gap:15px}
+.progress{
+  height:7px;
+  flex:1;
+  background:#20283a;
+  border-radius:99px;
+  overflow:hidden}
+.progress i{
+  display:block;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,var(--green),var(--cyan));
+  transition:.3s}
+.progressbox span{
+  font-size:13px;
+  color:var(--muted)}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px}
+.card{
+  position:relative;
+  background:linear-gradient(180deg,#121a2a,#0c111c);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:18px;
+  transition:.2s;
+  overflow:hidden}
+.card:hover{
+  transform:translateY(-4px);
+  border-color:#506181;
+  box-shadow:0 18px 45px #0006}
+.badge{
+  display:inline-flex;
+  color:var(--cyan);
+  background:#4edcff12;
+  border:1px solid #4edcff25;
+  border-radius:999px;
+  padding:5px 8px;
+  font-size:11px}
+.card h3{
+  font-size:19px;
+  margin:13px 0 4px}
+.from{
+  color:var(--muted);
+  font-size:12px}
+.best{
+  font-size:26px;
+  font-weight:950;
+  margin:5px 0 15px}
+.best small{
+  font-size:11px;
+  color:var(--green)}
+.stores{
+  border-top:1px solid #ffffff0e}
+.store{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:9px 0;
+  font-size:13px}
+.store b{
+  font-size:14px}
+.actions{
+  display:flex;
+  gap:8px;
+  margin-top:10px}
+.details{
+  flex:1;
+  border:1px solid var(--line);
+  background:#182034;
+  color:white;
+  padding:10px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:800}
+.fav{
+  width:42px;
+  border:1px solid var(--line);
+  background:#182034;
+  color:white;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:17px}
+.fav.on{
+  color:#ff6c91}
+.load{
+  display:block;
+  margin:28px auto 10px;
+  background:#171f31;
+  color:white;
+  border:1px solid #34415e;
+  padding:13px 25px;
+  border-radius:12px;
+  font-weight:850;
+  cursor:pointer}
+.empty{
+  text-align:center;
+  grid-column:1/-1;
+  padding:70px;
+  color:var(--muted)}
+.modal{
+  position:fixed;
+  inset:0;
+  background:#000b;
+  display:none;
+  place-items:center;
+  padding:20px;
+  z-index:50}
+.modal.open{
+  display:grid}
+.modalbox{
+  width:min(600px,100%);
+  max-height:85vh;
+  overflow:auto;
+  background:#111827;
+  border:1px solid #33405c;
+  border-radius:22px;
+  padding:24px}
+.modalhead{
+  display:flex;
+  justify-content:space-between;
+  gap:15px}
+.close{
+  background:none;
+  border:0;
+  color:white;
+  font-size:24px;
+  cursor:pointer}
+.modal .store{
+  padding:14px 0}
+.disabled{
+  display:block;
+  text-align:center;
+  background:#253047;
+  color:#9eabc1;
+  padding:11px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:800}
+.related{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap}
+.related button{
+  background:#182034;
+  color:white;
+  border:1px solid var(--line);
+  padding:8px 10px;
+  border-radius:9px;
+  cursor:pointer}
+.floating{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  background:var(--green);
+  color:#07110a;
+  border:0;
+  border-radius:999px;
+  padding:13px 16px;
+  font-weight:900;
+  box-shadow:0 10px 35px #0008;
+  cursor:pointer;
+  z-index:18}
+footer{
+  margin-top:70px;
+  border-top:1px solid #ffffff10;
+  padding:35px 0 55px;
+  color:var(--muted);
+  font-size:13px}
+@media(max-width:900px){
+  .heroGrid{
+  grid-template-columns:1fr}
+.heroCard{
+  display:none}
+.categoryGrid{
+  grid-template-columns:repeat(2,1fr)}
+.grid{
+  grid-template-columns:repeat(2,1fr)}
+.navlinks{
+  display:none}
+}
+@media(max-width:620px){
+  .hero{
+  padding-top:45px}
+.hero h1{
+  letter-spacing:-2.5px}
+.categoryGrid,.grid{
+  grid-template-columns:1fr}
+.searchbox button{
+  display:none}
+.progressbox{
+  align-items:flex-start;
+  flex-direction:column}
+.progress{
+  width:100%;
+  flex:none}
+.toolbar{
+  top:67px}
+.sort{
+  margin-left:0}
+}
+.radarDot{
+  display:inline-grid;
+  place-items:center;
+  width:26px;
+  height:26px;
+  margin-right:5px;
+  border:1px solid var(--green);
+  border-radius:50%;
+  color:var(--green);
+  box-shadow:0 0 18px #6cff9a55}
+.radarHero{
+  width:88px;
+  height:88px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  border:1px solid #6cff9a66;
+  color:var(--green);
+  background:repeating-radial-gradient(circle,#6cff9a0f 0 8px,#0000 9px 17px);
+  box-shadow:inset 0 0 35px #6cff9a16,0 0 40px #6cff9a18;
+  animation:pulseRadar 2.4s ease-in-out infinite}
+@keyframes pulseRadar{
+  50%{
+  box-shadow:inset 0 0 45px #4edcff20,0 0 55px #6cff9a35;
+  transform:scale(1.04)}
+}
+.logo b{
+  margin-left:2px}
+.hero h1 em{
+  text-shadow:0 0 34px #6cff9a18}
+  </style>
+ </head>
+ <body>
+  <div class="top">
+   <div class="wrap nav">
+    <div class="logo">
+     <span class="radarDot">
+      ◉
+     </span>
+     LOOT
+     <b>
+      RADAR
+     </b>
+    </div>
+    <div class="navlinks">
+     <a href="#explorar">
+      Explorar
+     </a>
+     <a href="#produtos">
+      Produtos
+     </a>
+     <a href="#sobre">
+      Como funciona
+     </a>
+    </div>
+   </div>
+  </div>
+  <header class="hero">
+   <div class="wrap heroGrid">
+    <div>
+     <div class="eyebrow">
+      RASTREANDO O MELHOR LOOT
+     </div>
+     <h1>
+      Rastreie. Compare.
+      <em>
+       Equipe-se melhor.
+      </em>
+     </h1>
+     <p>
+      Seu radar gamer para descobrir hardware, consoles e acessórios, comparar opções e encontrar o upgrade certo para o seu setup.
+     </p>
+     <div class="searchbox">
+      <input id="heroSearch" placeholder="O que você está procurando? Ex.: RTX 5070, PS5, mouse..."/>
+      <button id="heroBtn">
+       Encontrar
+      </button>
+     </div>
+    </div>
+    <aside class="heroCard">
+     <div class="big radarHero">
+      ◎
+     </div>
+     <h3>
+      100 loots no radar
+     </h3>
+     <p>
+      Escolha uma categoria, siga os sinais do radar e descubra produtos relacionados enquanto navega.
+     </p>
+     <div class="stats">
+      <div class="stat">
+       <strong>
+        100
+       </strong>
+       <span>
+        produtos
+       </span>
+      </div>
+      <div class="stat">
+       <strong>
+        8
+       </strong>
+       <span>
+        categorias
+       </span>
+      </div>
+      <div class="stat">
+       <strong>
+        3
+       </strong>
+       <span>
+        lojas
+       </span>
+      </div>
+     </div>
+    </aside>
+   </div>
+  </header>
+  <main class="wrap">
+   <div class="notice">
+    <strong>
+     Versão demonstrativa:
+    </strong>
+    os valores ainda são fictícios e não representam ofertas em tempo real. Alguns botões já podem conter links de afiliado. Os valores exibidos continuam demonstrativos e não representam ofertas em tempo real.
+   </div>
+   <section id="explorar">
+    <div class="sectionTitle">
+     <div>
+      <h2>
+       Por onde você quer começar?
+      </h2>
+      <p>
+       Escolha seu universo gamer.
+      </p>
+     </div>
+    </div>
+    <div class="categoryGrid" id="categoryGrid">
+    </div>
+   </section>
+  </main>
+  <div class="toolbar" id="produtos">
+   <div class="wrap tools">
+    <div class="filters" id="filters">
+    </div>
+    <select class="sort" id="sort">
+     <option value="default">
+      Ordenar: destaque
+     </option>
+     <option value="low">
+      Menor preço
+     </option>
+     <option value="high">
+      Maior preço
+     </option>
+     <option value="az">
+      Nome A–Z
+     </option>
+    </select>
+   </div>
+  </div>
+  <main class="wrap">
+   <div class="progressbox">
+    <span id="progressText">
+     Você explorou 0 de 100 produtos
+    </span>
+    <div class="progress">
+     <i id="progressBar">
+     </i>
+    </div>
+    <span id="count">
+    </span>
+   </div>
+   <section class="grid" id="grid">
+   </section>
+   <button class="load" id="load">
+    Mostrar mais produtos ↓
+   </button>
+   <footer id="sobre">
+    <strong>
+     LootRadar
+    </strong>
+    <br/>
+    <br/>
+    Seu radar independente para exploração e comparação de produtos gamer. Antes da monetização, integrações e links serão configurados conforme as regras oficiais de cada loja. • 2026
+   </footer>
+  </main>
+  <button class="floating" id="random">
+   🎲 Me surpreenda
+  </button>
+  <div class="modal" id="modal">
+   <div class="modalbox" id="modalbox">
+   </div>
+  </div>
+  <script>
+   const products = [
+  {
+    "id": 1,
+    "category": "PC / Hardware",
+    "name": "RTX 4060 8GB",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 2536,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 2637,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 2713,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "category": "PC / Hardware",
+    "name": "RTX 4060 Ti 8GB",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 2573,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 2675,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 2753,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "category": "PC / Hardware",
+    "name": "RTX 5060 8GB",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 2610,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 2714,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 2792,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "category": "PC / Hardware",
+    "name": "RTX 5060 Ti 8GB",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 2647,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 2752,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 2832,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "category": "PC / Hardware",
+    "name": "RTX 5060 Ti 16GB",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 2684,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 2791,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 2871,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "category": "PC / Hardware",
+    "name": "RTX 5070",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 2721,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 2829,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 2911,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "category": "PC / Hardware",
+    "name": "RTX 5070 Ti",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 4058,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 4220,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 4342,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "category": "PC / Hardware",
+    "name": "RX 7600 8GB",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 2795,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 2906,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 2990,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "category": "PC / Hardware",
+    "name": "RX 7600 XT 16GB",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 2832,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 2945,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 3030,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "category": "PC / Hardware",
+    "name": "RX 7700 XT",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 2499,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 2598,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 2673,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "category": "PC / Hardware",
+    "name": "RX 7800 XT",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 2536,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 2637,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 2713,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "category": "PC / Hardware",
+    "name": "Ryzen 5 5600",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1373,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1427,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1469,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "category": "PC / Hardware",
+    "name": "Ryzen 5 5600G",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1410,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1466,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1508,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "category": "PC / Hardware",
+    "name": "Ryzen 7 5700X3D",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1447,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1504,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1548,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "category": "PC / Hardware",
+    "name": "Ryzen 5 7600",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1484,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1543,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1587,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "category": "PC / Hardware",
+    "name": "Ryzen 7 7800X3D",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 2721,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 2829,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 2911,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "category": "PC / Hardware",
+    "name": "Ryzen 7 9800X3D",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 4058,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 4220,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 4342,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "category": "PC / Hardware",
+    "name": "Ryzen 5 9600X",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1595,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1658,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1706,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "category": "PC / Hardware",
+    "name": "Kingston Fury 16GB",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1632,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1697,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1746,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "category": "PC / Hardware",
+    "name": "Kingston Fury 32GB",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1299,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1350,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1389,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "category": "PC / Hardware",
+    "name": "Kingston NV2 1TB",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1336,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1389,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1429,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "category": "PC / Hardware",
+    "name": "WD Black SN770 1TB",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1373,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1427,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1469,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "category": "PC / Hardware",
+    "name": "Samsung 990 PRO 1TB",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1410,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1466,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1508,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "category": "PC / Hardware",
+    "name": "MSI MAG A650BN",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1447,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1504,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1548,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "category": "PC / Hardware",
+    "name": "Gigabyte P650G",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1484,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1543,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1587,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "category": "Monitores",
+    "name": "AOC 24G2",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1121,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1165,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1199,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "category": "Monitores",
+    "name": "AOC 24G4",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1158,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1204,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1239,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "category": "Monitores",
+    "name": "AOC 27G2",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1195,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1242,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1278,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "category": "Monitores",
+    "name": "AOC 27G4",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1232,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1281,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1318,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "category": "Monitores",
+    "name": "Samsung Odyssey G3 24",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 899,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 934,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 961,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "category": "Monitores",
+    "name": "Samsung Odyssey G5 27",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 936,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 973,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1001,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "category": "Monitores",
+    "name": "LG UltraGear 24",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 973,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1011,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1041,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "category": "Monitores",
+    "name": "LG UltraGear 27",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1010,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1050,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1080,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "category": "Monitores",
+    "name": "ASUS TUF Gaming 24",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1047,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1088,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1120,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "category": "Monitores",
+    "name": "ASUS TUF Gaming 27",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1084,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1127,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1159,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "category": "Mouses",
+    "name": "Logitech G203",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 421,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 437,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 450,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 37,
+    "category": "Mouses",
+    "name": "Logitech G305",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 458,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 476,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 490,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 38,
+    "category": "Mouses",
+    "name": "Logitech G502",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 495,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 514,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 529,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 39,
+    "category": "Mouses",
+    "name": "Logitech G Pro X Superlight",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 532,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 553,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 569,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 40,
+    "category": "Mouses",
+    "name": "Razer DeathAdder Essential",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 199,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 206,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 212,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 41,
+    "category": "Mouses",
+    "name": "Razer DeathAdder V3",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 236,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 245,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 252,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 42,
+    "category": "Mouses",
+    "name": "Razer Basilisk",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 273,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 283,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 292,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "category": "Mouses",
+    "name": "HyperX Pulsefire",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 310,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 322,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 331,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 44,
+    "category": "Mouses",
+    "name": "Redragon Cobra",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 347,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 360,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 371,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 45,
+    "category": "Mouses",
+    "name": "Redragon Invader Pro",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 384,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 399,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 410,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 46,
+    "category": "Teclados",
+    "name": "Redragon Kumara",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 471,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 489,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 503,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 47,
+    "category": "Teclados",
+    "name": "Redragon Fizz",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 508,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 528,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 543,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 48,
+    "category": "Teclados",
+    "name": "Redragon Mitra",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 545,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 566,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 583,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 49,
+    "category": "Teclados",
+    "name": "Logitech G213",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 582,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 605,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 622,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 50,
+    "category": "Teclados",
+    "name": "Logitech G413",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 249,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 258,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 266,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 51,
+    "category": "Teclados",
+    "name": "HyperX Alloy Origins",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 286,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 297,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 306,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 52,
+    "category": "Teclados",
+    "name": "HyperX Alloy Core",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 323,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 335,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 345,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 53,
+    "category": "Teclados",
+    "name": "Corsair K55",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 360,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 374,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 385,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 54,
+    "category": "Teclados",
+    "name": "Razer BlackWidow",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 397,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 412,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 424,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 55,
+    "category": "Teclados",
+    "name": "Teclado Rapid Trigger",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 434,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 451,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 464,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 56,
+    "category": "Headsets / Áudio",
+    "name": "HyperX Cloud II",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 521,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 541,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 557,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 57,
+    "category": "Headsets / Áudio",
+    "name": "HyperX Cloud III",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 558,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 580,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 597,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 58,
+    "category": "Headsets / Áudio",
+    "name": "HyperX Cloud Stinger 2",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 595,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 618,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 636,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 59,
+    "category": "Headsets / Áudio",
+    "name": "Logitech G435",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 632,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 657,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 676,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 60,
+    "category": "Headsets / Áudio",
+    "name": "Logitech G733",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 299,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 310,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 319,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 61,
+    "category": "Headsets / Áudio",
+    "name": "Logitech G Pro X",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 336,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 349,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 359,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 62,
+    "category": "Headsets / Áudio",
+    "name": "Razer BlackShark V2",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 373,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 387,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 399,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 63,
+    "category": "Headsets / Áudio",
+    "name": "JBL Quantum 100",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 410,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 426,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 438,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 64,
+    "category": "Headsets / Áudio",
+    "name": "JBL Quantum 200",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 447,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 464,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 478,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 65,
+    "category": "Headsets / Áudio",
+    "name": "Redragon Zeus Pro",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 484,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 503,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 517,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 66,
+    "category": "PlayStation",
+    "name": "PlayStation 5 Slim Digital",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1921,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1997,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 2055,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 67,
+    "category": "PlayStation",
+    "name": "PlayStation 5 Slim com leitor",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1958,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 2036,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 2095,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 68,
+    "category": "PlayStation",
+    "name": "PlayStation 5 Pro",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 3295,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 3426,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 3525,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 69,
+    "category": "PlayStation",
+    "name": "DualSense",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 832,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 865,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 890,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 70,
+    "category": "PlayStation",
+    "name": "DualSense Edge",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 499,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 518,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 533,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 71,
+    "category": "PlayStation",
+    "name": "Base de carregamento DualSense",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 536,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 557,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 573,
+        "url": "https://meli.la/1mwX41x"
+      }
+    ]
+  },
+  {
+    "id": 72,
+    "category": "PlayStation",
+    "name": "SSD M.2 para PS5",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 573,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 595,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 613,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 73,
+    "category": "PlayStation",
+    "name": "Pulse 3D",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 610,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 634,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 652,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 74,
+    "category": "PlayStation",
+    "name": "Gift Card PlayStation R$50",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 647,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 672,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 692,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 75,
+    "category": "PlayStation",
+    "name": "Gift Card PlayStation R$100",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 684,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 711,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 731,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 76,
+    "category": "Xbox",
+    "name": "Xbox Series S",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 2021,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 2101,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 2162,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 77,
+    "category": "Xbox",
+    "name": "Xbox Series X",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 3358,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 3492,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 3593,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 78,
+    "category": "Xbox",
+    "name": "Controle Xbox Wireless",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 895,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 930,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 957,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 79,
+    "category": "Xbox",
+    "name": "Xbox Elite Wireless Controller",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 932,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 969,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 997,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 80,
+    "category": "Xbox",
+    "name": "GameSir G7 SE",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 599,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 622,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 640,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 81,
+    "category": "Xbox",
+    "name": "Xbox Game Pass",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 636,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 661,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 680,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 82,
+    "category": "Xbox",
+    "name": "Xbox Gift Card",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 673,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 699,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 720,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 83,
+    "category": "Nintendo",
+    "name": "Nintendo Switch 2",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1810,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1882,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1936,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 84,
+    "category": "Nintendo",
+    "name": "Joy-Con Switch 2",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 647,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 672,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 692,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 85,
+    "category": "Nintendo",
+    "name": "Pro Controller",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 684,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 711,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 731,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 86,
+    "category": "Nintendo",
+    "name": "MicroSD para Nintendo Switch",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 721,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 749,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 771,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 87,
+    "category": "Nintendo",
+    "name": "Jogos Nintendo Switch 2",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1958,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 2036,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 2095,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 88,
+    "category": "Setup",
+    "name": "Cadeira Gamer",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 475,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 494,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 508,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 89,
+    "category": "Setup",
+    "name": "Mesa Gamer",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 512,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 532,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 547,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 90,
+    "category": "Setup",
+    "name": "Mousepad Extended",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 179,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 186,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 191,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 91,
+    "category": "Setup",
+    "name": "Suporte para headset",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 216,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 224,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 231,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 92,
+    "category": "Setup",
+    "name": "Suporte para controle",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 253,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 263,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 270,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 93,
+    "category": "Setup",
+    "name": "Braço articulado para monitor",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 290,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 301,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 310,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 94,
+    "category": "Setup",
+    "name": "Microfone USB",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 327,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 340,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 349,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 95,
+    "category": "Setup",
+    "name": "Webcam",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 364,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 378,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 389,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 96,
+    "category": "Outros / Portáteis",
+    "name": "Notebook Gamer",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 3421,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 3557,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 3660,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 97,
+    "category": "Outros / Portáteis",
+    "name": "Steam Deck",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 3458,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 3596,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 3700,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 98,
+    "category": "Outros / Portáteis",
+    "name": "ROG Ally",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 3495,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 3634,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 3739,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 99,
+    "category": "Outros / Portáteis",
+    "name": "SSD externo",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 1032,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 1073,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 1104,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  },
+  {
+    "id": 100,
+    "category": "Outros / Portáteis",
+    "name": "HD externo",
+    "stores": [
+      {
+        "name": "KaBuM!",
+        "price": 699,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Amazon",
+        "price": 726,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      },
+      {
+        "name": "Mercado Livre",
+        "price": 747,
+        "url": "COLE_SEU_LINK_DE_AFILIADO_AQUI"
+      }
+    ]
+  }
+];
+
+const icons={'PC / Hardware':'🖥️','Monitores':'🖼️','Mouses':'🖱️','Teclados':'⌨️','Headsets / Áudio':'🎧','PlayStation':'🎮','Xbox':'🟢','Nintendo':'🔴','Setup':'✨','Outros / Portáteis':'⚡'};
+const categories=['Todos',...new Set(products.map(p=>p.category))];let active='Todos',limit=12;const seen=new Set(JSON.parse(localStorage.getItem('lootradar-seen')||'[]'));const favs=new Set(JSON.parse(localStorage.getItem('lootradar-favs')||'[]'));const $=s=>document.querySelector(s);function money(v){return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}function save(){localStorage.setItem('lootradar-seen',JSON.stringify([...seen]));localStorage.setItem('lootradar-favs',JSON.stringify([...favs]))}function best(p){return Math.min(...p.stores.map(s=>s.price))}function makeCats(){const el=$('#categoryGrid');el.innerHTML=categories.slice(1).map(c=>{const n=products.filter(p=>p.category===c).length;return `<button class="cat" data-c="${c}"><span class="ico">${icons[c]||'🎯'}</span><strong>${c}</strong><small>${n} produtos para descobrir</small></button>`}).join('');el.querySelectorAll('.cat').forEach(b=>b.onclick=()=>{active=b.dataset.c;limit=12;makeFilters();render();$('#produtos').scrollIntoView()})}function makeFilters(){$('#filters').innerHTML=categories.map(c=>`<button class="filter ${c===active?'active':''}" data-c="${c}">${c}</button>`).join('');document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{active=b.dataset.c;limit=12;makeFilters();render()})}function current(){const q=$('#heroSearch').value.toLowerCase().trim();let a=products.filter(p=>(active==='Todos'||p.category===active)&&p.name.toLowerCase().includes(q));const s=$('#sort').value;if(s==='low')a.sort((a,b)=>best(a)-best(b));if(s==='high')a.sort((a,b)=>best(b)-best(a));if(s==='az')a.sort((a,b)=>a.name.localeCompare(b.name));return a}function render(){const all=current(),list=all.slice(0,limit);$('#count').textContent=`${all.length} encontrados`;$('#grid').innerHTML=list.length?list.map(p=>`<article class="card"><span class="badge">${icons[p.category]||'🎯'} ${p.category}</span><h3>${p.name}</h3><div class="from">Menor valor demonstrativo</div><div class="best">${money(best(p))} <small>entre 3 lojas</small></div><div class="stores">${p.stores.map(s=>`<div class="store"><span>${s.name}</span><b>${money(s.price)}</b></div>`).join('')}</div><div class="actions"><button class="details" onclick="openProduct(${p.id})">Comparar opções</button><button class="fav ${favs.has(p.id)?'on':''}" onclick="toggleFav(${p.id})">♥</button></div></article>`).join(''):'<div class="empty">Nenhum produto encontrado. Tente outro termo ou categoria.</div>';$('#load').style.display=limit<all.length?'block':'none';updateProgress()}function updateProgress(){$('#progressText').textContent=`Você explorou ${seen.size} de ${products.length} produtos`;$('#progressBar').style.width=(seen.size/products.length*100)+'%'}window.toggleFav=id=>{favs.has(id)?favs.delete(id):favs.add(id);save();render()};window.openProduct=id=>{const p=products.find(x=>x.id===id);seen.add(id);save();updateProgress();const rel=products.filter(x=>x.category===p.category&&x.id!==id).slice(0,4);$('#modalbox').innerHTML=`<div class="modalhead"><div><span class="badge">${p.category}</span><h2>${p.name}</h2></div><button class="close" onclick="closeModal()">×</button></div><p style="color:var(--muted)">Compare os valores demonstrativos abaixo. Quando houver um link de afiliado configurado, o botão da loja ficará disponível. Confira o preço final diretamente na loja.</p>${p.stores.map(s=>`<div class="store"><span>${s.name}</span><b>${money(s.price)}</b></div>${s.url&&s.url!=='COLE_SEU_LINK_DE_AFILIADO_AQUI'?`<a class="details" style="display:block;text-align:center;text-decoration:none;margin:8px 0 14px" href="${s.url}" target="_blank" rel="nofollow sponsored noopener">Ver oferta na ${s.name} ↗</a>`:`<a class="disabled" href="#" onclick="event.preventDefault()">Link da loja em breve</a>`}`).join('')}<h3>Continue explorando</h3><div class="related">${rel.map(x=>`<button onclick="openProduct(${x.id})">${x.name}</button>`).join('')}</div>`;$('#modal').classList.add('open')};window.closeModal=()=>$('#modal').classList.remove('open');$('#modal').onclick=e=>{if(e.target.id==='modal')closeModal()};$('#load').onclick=()=>{limit+=12;render()};$('#sort').onchange=render;$('#heroSearch').oninput=()=>{active='Todos';limit=12;makeFilters();render()};$('#heroBtn').onclick=()=>$('#produtos').scrollIntoView();$('#random').onclick=()=>openProduct(products[Math.floor(Math.random()*products.length)].id);makeCats();makeFilters();render();
+  </script>
+ </body>
+</html>

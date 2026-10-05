@@ -2196,7 +2196,7 @@ footer{
       },
       {
         "name": "Mercado Livre",
-        "price": 573,
+        "price": null,
         "url": "https://meli.la/1mwX41x"
       }
     ]
@@ -2842,7 +2842,101 @@ footer{
 ];
 
 const icons={'PC / Hardware':'🖥️','Monitores':'🖼️','Mouses':'🖱️','Teclados':'⌨️','Headsets / Áudio':'🎧','PlayStation':'🎮','Xbox':'🟢','Nintendo':'🔴','Setup':'✨','Outros / Portáteis':'⚡'};
-const categories=['Todos',...new Set(products.map(p=>p.category))];let active='Todos',limit=12;const seen=new Set(JSON.parse(localStorage.getItem('lootradar-seen')||'[]'));const favs=new Set(JSON.parse(localStorage.getItem('lootradar-favs')||'[]'));const $=s=>document.querySelector(s);function money(v){return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}function save(){localStorage.setItem('lootradar-seen',JSON.stringify([...seen]));localStorage.setItem('lootradar-favs',JSON.stringify([...favs]))}function best(p){return Math.min(...p.stores.map(s=>s.price))}function makeCats(){const el=$('#categoryGrid');el.innerHTML=categories.slice(1).map(c=>{const n=products.filter(p=>p.category===c).length;return `<button class="cat" data-c="${c}"><span class="ico">${icons[c]||'🎯'}</span><strong>${c}</strong><small>${n} produtos para descobrir</small></button>`}).join('');el.querySelectorAll('.cat').forEach(b=>b.onclick=()=>{active=b.dataset.c;limit=12;makeFilters();render();$('#produtos').scrollIntoView()})}function makeFilters(){$('#filters').innerHTML=categories.map(c=>`<button class="filter ${c===active?'active':''}" data-c="${c}">${c}</button>`).join('');document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{active=b.dataset.c;limit=12;makeFilters();render()})}function current(){const q=$('#heroSearch').value.toLowerCase().trim();let a=products.filter(p=>(active==='Todos'||p.category===active)&&p.name.toLowerCase().includes(q));const s=$('#sort').value;if(s==='low')a.sort((a,b)=>best(a)-best(b));if(s==='high')a.sort((a,b)=>best(b)-best(a));if(s==='az')a.sort((a,b)=>a.name.localeCompare(b.name));return a}function render(){const all=current(),list=all.slice(0,limit);$('#count').textContent=`${all.length} encontrados`;$('#grid').innerHTML=list.length?list.map(p=>`<article class="card"><span class="badge">${icons[p.category]||'🎯'} ${p.category}</span><h3>${p.name}</h3><div class="from">Menor valor demonstrativo</div><div class="best">${money(best(p))} <small>entre 3 lojas</small></div><div class="stores">${p.stores.map(s=>`<div class="store"><span>${s.name}</span><b>${money(s.price)}</b></div>`).join('')}</div><div class="actions"><button class="details" onclick="openProduct(${p.id})">Comparar opções</button><button class="fav ${favs.has(p.id)?'on':''}" onclick="toggleFav(${p.id})">♥</button></div></article>`).join(''):'<div class="empty">Nenhum produto encontrado. Tente outro termo ou categoria.</div>';$('#load').style.display=limit<all.length?'block':'none';updateProgress()}function updateProgress(){$('#progressText').textContent=`Você explorou ${seen.size} de ${products.length} produtos`;$('#progressBar').style.width=(seen.size/products.length*100)+'%'}window.toggleFav=id=>{favs.has(id)?favs.delete(id):favs.add(id);save();render()};window.openProduct=id=>{const p=products.find(x=>x.id===id);seen.add(id);save();updateProgress();const rel=products.filter(x=>x.category===p.category&&x.id!==id).slice(0,4);$('#modalbox').innerHTML=`<div class="modalhead"><div><span class="badge">${p.category}</span><h2>${p.name}</h2></div><button class="close" onclick="closeModal()">×</button></div><p style="color:var(--muted)">Compare os valores demonstrativos abaixo. Quando houver um link de afiliado configurado, o botão da loja ficará disponível. Confira o preço final diretamente na loja.</p>${p.stores.map(s=>`<div class="store"><span>${s.name}</span><b>${money(s.price)}</b></div>${s.url&&s.url!=='COLE_SEU_LINK_DE_AFILIADO_AQUI'?`<a class="details" style="display:block;text-align:center;text-decoration:none;margin:8px 0 14px" href="${s.url}" target="_blank" rel="nofollow sponsored noopener">Ver oferta na ${s.name} ↗</a>`:`<a class="disabled" href="#" onclick="event.preventDefault()">Link da loja em breve</a>`}`).join('')}<h3>Continue explorando</h3><div class="related">${rel.map(x=>`<button onclick="openProduct(${x.id})">${x.name}</button>`).join('')}</div>`;$('#modal').classList.add('open')};window.closeModal=()=>$('#modal').classList.remove('open');$('#modal').onclick=e=>{if(e.target.id==='modal')closeModal()};$('#load').onclick=()=>{limit+=12;render()};$('#sort').onchange=render;$('#heroSearch').oninput=()=>{active='Todos';limit=12;makeFilters();render()};$('#heroBtn').onclick=()=>$('#produtos').scrollIntoView();$('#random').onclick=()=>openProduct(products[Math.floor(Math.random()*products.length)].id);makeCats();makeFilters();render();
+const categories = ['Todos', ...new Set(products.map(p => p.category))];
+let active = 'Todos', limit = 12;
+const seen = new Set(JSON.parse(localStorage.getItem('lootradar-seen') || '[]'));
+const favs = new Set(JSON.parse(localStorage.getItem('lootradar-favs') || '[]'));
+const $ = s => document.querySelector(s);
+
+function money(v) {
+  if (v === null || v === undefined) return 'Ver preço atual';
+  return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function save() {
+  localStorage.setItem('lootradar-seen', JSON.stringify([...seen]));
+  localStorage.setItem('lootradar-favs', JSON.stringify([...favs]));
+}
+
+function best(p) {
+  const prices = p.stores.map(s => s.price).filter(price => typeof price === 'number');
+  return prices.length ? Math.min(...prices) : null;
+}
+
+function hasRealOffer(p) {
+  return p.stores.some(s => s.url && s.url !== 'COLE_SEU_LINK_DE_AFILIADO_AQUI');
+}
+
+function makeCats() {
+  const el = $('#categoryGrid');
+  el.innerHTML = categories.slice(1).map(c => {
+    const n = products.filter(p => p.category === c).length;
+    return `<button class="cat" data-c="${c}"><span class="ico">${icons[c] || '🎯'}</span><strong>${c}</strong><small>${n} produtos para descobrir</small></button>`;
+  }).join('');
+  el.querySelectorAll('.cat').forEach(b => b.onclick = () => {
+    active = b.dataset.c; limit = 12; makeFilters(); render(); $('#produtos').scrollIntoView();
+  });
+}
+
+function makeFilters() {
+  $('#filters').innerHTML = categories.map(c => `<button class="filter ${c === active ? 'active' : ''}" data-c="${c}">${c}</button>`).join('');
+  document.querySelectorAll('.filter').forEach(b => b.onclick = () => {
+    active = b.dataset.c; limit = 12; makeFilters(); render();
+  });
+}
+
+function current() {
+  const q = $('#heroSearch').value.toLowerCase().trim();
+  let a = products.filter(p => (active === 'Todos' || p.category === active) && p.name.toLowerCase().includes(q));
+  const s = $('#sort').value;
+  if (s === 'low') a.sort((a, b) => (best(a) ?? Infinity) - (best(b) ?? Infinity));
+  if (s === 'high') a.sort((a, b) => (best(b) ?? -Infinity) - (best(a) ?? -Infinity));
+  if (s === 'az') a.sort((a, b) => a.name.localeCompare(b.name));
+  return a;
+}
+
+function render() {
+  const all = current(), list = all.slice(0, limit);
+  $('#count').textContent = `${all.length} encontrados`;
+  $('#grid').innerHTML = list.length ? list.map(p => {
+    const realOffer = hasRealOffer(p);
+    const priceArea = realOffer
+      ? `<div class="from">Oferta disponível</div><div class="best">Ver preço atual <small>na loja</small></div>`
+      : `<div class="from">Menor valor demonstrativo</div><div class="best">${money(best(p))} <small>entre 3 lojas</small></div>`;
+    return `<article class="card"><span class="badge">${icons[p.category] || '🎯'} ${p.category}</span><h3>${p.name}</h3>${priceArea}<div class="stores">${p.stores.map(s => `<div class="store"><span>${s.name}</span><b>${money(s.price)}</b></div>`).join('')}</div><div class="actions"><button class="details" onclick="openProduct(${p.id})">Comparar opções</button><button class="fav ${favs.has(p.id) ? 'on' : ''}" onclick="toggleFav(${p.id})">♥</button></div></article>`;
+  }).join('') : '<div class="empty">Nenhum produto encontrado. Tente outro termo ou categoria.</div>';
+  $('#load').style.display = limit < all.length ? 'block' : 'none';
+  updateProgress();
+}
+
+function updateProgress() {
+  $('#progressText').textContent = `Você explorou ${seen.size} de ${products.length} produtos`;
+  $('#progressBar').style.width = (seen.size / products.length * 100) + '%';
+}
+
+window.toggleFav = id => { favs.has(id) ? favs.delete(id) : favs.add(id); save(); render(); };
+
+window.openProduct = id => {
+  const p = products.find(x => x.id === id);
+  seen.add(id); save(); updateProgress();
+  const rel = products.filter(x => x.category === p.category && x.id !== id).slice(0, 4);
+  $('#modalbox').innerHTML = `<div class="modalhead"><div><span class="badge">${p.category}</span><h2>${p.name}</h2></div><button class="close" onclick="closeModal()">×</button></div><p style="color:var(--muted)">Os preços sem oferta ativa são demonstrativos. Quando houver um link de afiliado configurado, consulte o preço atual diretamente na loja.</p>${p.stores.map(s => {
+    const linkReal = s.url && s.url !== 'COLE_SEU_LINK_DE_AFILIADO_AQUI';
+    return `<div class="store"><span>${s.name}</span><b>${linkReal && s.price === null ? 'Ver preço atual' : money(s.price)}</b></div>${linkReal ? `<a class="details" style="display:block;text-align:center;text-decoration:none;margin:8px 0 14px" href="${s.url}" target="_blank" rel="nofollow sponsored noopener">Ver oferta na ${s.name} ↗</a>` : `<a class="disabled" href="#" onclick="event.preventDefault()">Link da loja em breve</a>`}`;
+  }).join('')}<h3>Continue explorando</h3><div class="related">${rel.map(x => `<button onclick="openProduct(${x.id})">${x.name}</button>`).join('')}</div>`;
+  $('#modal').classList.add('open');
+};
+
+window.closeModal = () => $('#modal').classList.remove('open');
+$('#modal').onclick = e => { if (e.target.id === 'modal') closeModal(); };
+$('#load').onclick = () => { limit += 12; render(); };
+$('#sort').onchange = render;
+$('#heroSearch').oninput = () => { active = 'Todos'; limit = 12; makeFilters(); render(); };
+$('#heroBtn').onclick = () => $('#produtos').scrollIntoView();
+$('#random').onclick = () => openProduct(products[Math.floor(Math.random() * products.length)].id);
+makeCats();
+makeFilters();
+render();
   </script>
  </body>
 </html>
